@@ -1,0 +1,25 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Switch } from "@/components/ui/switch"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+
+interface HeaderProps {
+  section: string;
+}
+
+const Header = ({ section }: HeaderProps) => { 
+  return (    
+    <div className="flex items-center justify-between p-4 border-b"> {/* Added some basic flex styling for layout */}
+      <SidebarTrigger/>
+      <h2>{section}</h2>
+      <div className="flex items-center space-x-4"> {/* Group switch and avatar */}
+        <Switch />
+        <Avatar>
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+      </div>
+    </div>
+  )
+}
+
+export default Header
