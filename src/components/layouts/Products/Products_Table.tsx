@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 // Importa Product, createProduct, CreateProductPayload y createSedeProductAssociation
-import { getProducts, createProduct, updateProduct, deleteProduct, type CreateProductPayload, type Product } from '@/api/product';
+import { getProducts, updateProduct, deleteProduct, type Product } from '@/api/product';
 import { productColumns } from './columns';
 import { useToast } from '@/components/ui/toast';
 import { useModal } from '@/components/ui/modal';
@@ -89,17 +89,6 @@ const ProductTable: React.FC = () => {
           message: 'El producto ha sido actualizado exitosamente'
         });
       } else {
-        // Crear nuevo producto
-        const productPayload: CreateProductPayload = {
-          name: formData.name,
-          sku: formData.sku,
-          price: formData.price,
-          description: formData.description,
-          category: formData.category,
-          sedeId: formData.sedeId,
-          initialStockAtSede: formData.initialStockAtSede,
-        };
-        const createdProduct = await createProduct(productPayload);
         addToast({
           type: 'success',
           title: 'Producto agregado',

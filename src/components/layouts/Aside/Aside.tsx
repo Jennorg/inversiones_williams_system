@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Sidebar,
   SidebarContent,
@@ -9,7 +8,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { cn } from "@/lib/utils";
 
 const Aside = () => {
   return (

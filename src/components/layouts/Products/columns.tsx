@@ -1,10 +1,4 @@
-// src/components/ProductTable/columns.ts
-
 import React from 'react';
-
-// Asegúrate de que la interfaz Product coincida con la que tienes en src/api/products.ts
-// Es buena práctica importar esta interfaz si la tienes definida en un archivo central de tipos
-// Por ejemplo: import { Product } from '../../types/productTypes';
 interface Product {
   id: number;
   name: string;
@@ -17,10 +11,10 @@ interface Product {
   updatedAt: string | null; // Asumimos string ISO
 }
 
-interface ProductWithActions extends Product {
-  onEdit?: (product: Product) => void;
-  onDelete?: (id: number) => void;
-}
+// interface ProductWithActions extends Product {
+//   onEdit?: (product: Product) => void;
+//   onDelete?: (id: number) => void;
+// }
 
 // Define una interfaz genérica para una columna de tabla
 // T es el tipo de los datos de cada fila (en este caso, 'Product')
