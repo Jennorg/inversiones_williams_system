@@ -1,7 +1,5 @@
 import React from 'react';
 import { useModal, modal } from './modal';
-
-// Componente de ejemplo para mostrar cómo usar el sistema de modales
 const ModalExample: React.FC = () => {
   const { showModal } = useModal();
 

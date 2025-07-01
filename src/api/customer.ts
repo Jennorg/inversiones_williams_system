@@ -1,3 +1,4 @@
+// Customer data structure
 interface Customer {
   id: number;
   firstName: string;
@@ -9,6 +10,7 @@ interface Customer {
   updatedAt: string | null;
 }
 
+// Payload for creating new customers
 interface CreateCustomerPayload {
   firstName: string;
   lastName: string;
@@ -19,15 +21,14 @@ interface CreateCustomerPayload {
 
 interface UpdateCustomerPayload extends Partial<CreateCustomerPayload> {}
 
-// --- Funciones de Llamada a la API para Clientes ---
-
+// API functions for customer management
 export const getCustomers = async (): Promise<Customer[]> => {
   const response = await fetch(`${process.env.API_BASE_URL}/customers`);
   if (!response.ok) {
     throw new Error(`Error fetching customers: ${response.statusText}`);
   }
   const data = await response.json();
-  return data.data.customers; // Ajusta según la estructura real de tu respuesta del backend
+  return data.data.customers;
 };
 
 export const getCustomerById = async (id: number): Promise<Customer> => {

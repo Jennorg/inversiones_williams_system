@@ -5,17 +5,18 @@ import { ModalProvider } from "@/components/ui/modal"
 import Header from '@/components/layouts/Header/Header'
 import DataTable from '@/components/layouts/Products/Products_Table'
 
+// Main application component with global providers
 function App() {
   
   return (
     <ModalProvider>
       <ToastProvider>
-        <SidebarProvider>
-          <Aside />
-          <main className='w-full'>
-            <Header section='Productos'/>
-            <DataTable/>
-          </main>
+    <SidebarProvider>
+      <Aside />
+      <main className='w-full'>
+        <Header section='Productos'/>
+        <DataTable/>
+      </main>
         </SidebarProvider>
       </ToastProvider>
     </ModalProvider>

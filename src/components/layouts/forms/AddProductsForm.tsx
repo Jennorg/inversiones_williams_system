@@ -1,22 +1,21 @@
-// src/components/Products/AddProductForm.tsx
-
 import React, { useState, useEffect } from 'react';
-import { type Sede, getSedes } from '@/api/product'; // Importa Sede y getSedes
+import { type Sede, getSedes } from '@/api/product';
 import { cn } from '@/lib/utils';
 
-// Interfaz para los datos completos recolectados por el formulario
+// Estructura de datos del formulario
 interface FormDataCollected {
   name: string;
   sku: string;
-  price: number; // CAMBIADO: 'unit_price' a 'price' para coincidir con el backend
+  price: number;
   description?: string | null;
   category?: string | null;
-  sedeId: number; // Agregado para coincidir con el backend
-  initialStockAtSede: number; // Agregado para coincidir con el backend
+  sedeId: number;
+  initialStockAtSede: number;
 }
 
+// Props del componente
 interface AddProductFormProps {
-  onSave: (productData: FormDataCollected) => void; // onSave ahora espera FormDataCollected
+  onSave: (productData: FormDataCollected) => void;
   onCancel: () => void;
   isLoading?: boolean;
   editingProduct?: {
@@ -29,20 +28,23 @@ interface AddProductFormProps {
   } | null;
 }
 
+// Formulario para crear/editar productos
 const AddProductForm: React.FC<AddProductFormProps> = ({ onSave, onCancel, isLoading = false, editingProduct = null }) => {
+  // Estados del formulario
   const [productName, setProductName] = useState<string>('');
   const [sku, setSku] = useState<string>('');
   const [category, setCategory] = useState<string>('');
-  const [price, setPrice] = useState<number>(0); // CAMBIADO: 'unitPrice' a 'price'
+  const [price, setPrice] = useState<number>(0);
   const [description, setDescription] = useState<string>('');
-  // Nuevos estados para la sede y el stock inicial
   const [selectedSedeId, setSelectedSedeId] = useState<number | undefined>(undefined);
   const [initialStock, setInitialStock] = useState<number>(0);
+  
+  // Estados para manejar sedes
   const [sedes, setSedes] = useState<Sede[]>([]);
   const [sedesLoading, setSedesLoading] = useState<boolean>(true);
   const [sedesError, setSedesError] = useState<string | null>(null);
 
-  // Cargar las sedes al montar el componente para el dropdown
+  // Cargar sedes disponibles
   useEffect(() => {
     const fetchSedes = async () => {
       try {
@@ -50,7 +52,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSave, onCancel, isLoa
         const fetchedSedes = await getSedes();
         setSedes(fetchedSedes);
         if (fetchedSedes.length > 0) {
-          setSelectedSedeId(fetchedSedes[0].id); // Selecciona la primera sede por defecto
+          setSelectedSedeId(fetchedSedes[0].id);
         }
       } catch (err: any) {
         console.error("Failed to fetch sedes:", err);
@@ -62,7 +64,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSave, onCancel, isLoa
     fetchSedes();
   }, []);
 
-  // Cargar datos del producto si estamos editando
+  // Cargar datos del producto si se está editando
   useEffect(() => {
     if (editingProduct) {
       setProductName(editingProduct.name);
@@ -71,7 +73,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSave, onCancel, isLoa
       setDescription(editingProduct.description || '');
       setCategory(editingProduct.category || '');
     } else {
-      // Resetear formulario si no estamos editando
+      // Limpiar formulario para nuevo producto
       setProductName('');
       setSku('');
       setPrice(0);
@@ -80,17 +82,18 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSave, onCancel, isLoa
     }
   }, [editingProduct]);
 
+  // Manejar envío del formulario
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
     const formData: FormDataCollected = {
       name: productName,
       sku: sku,
-      price: price, // CAMBIADO: 'unit_price' a 'price'
+      price: price,
       description: description || null,
       category: category || null,
-      sedeId: selectedSedeId || 1, // Agregado para coincidir con el backend
-      initialStockAtSede: initialStock, // Agregado para coincidir con el backend
+      sedeId: selectedSedeId || 1,
+      initialStockAtSede: initialStock,
     };
 
     onSave(formData);
@@ -98,6 +101,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSave, onCancel, isLoa
 
   return (
     <div className="mx-auto max-w-2xl rounded-2xl bg-white p-8 shadow-2xl ring-1 ring-slate-200">
+      {/* Encabezado del formulario */}
       <div className="mb-8 text-center">
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-emerald-500 to-emerald-600">
           <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -112,7 +116,8 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSave, onCancel, isLoa
         </p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Product Name */}
+
+        {/* Campo: Nombre del producto */}
         <div>
           <label htmlFor="productName" className="mb-2 block text-sm font-semibold text-slate-700">
             Nombre del Producto
@@ -128,7 +133,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSave, onCancel, isLoa
           />
         </div>
 
-        {/* SKU */}
+        {/* Campo: SKU */}
         <div>
           <label htmlFor="sku" className="mb-2 block text-sm font-semibold text-slate-700">
             SKU
@@ -144,7 +149,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSave, onCancel, isLoa
           />
         </div>
 
-        {/* Category */}
+        {/* Campo: Categoría */}
         <div>
           <label htmlFor="category" className="mb-2 block text-sm font-semibold text-slate-700">
             Categoría
@@ -163,7 +168,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSave, onCancel, isLoa
           </select>
         </div>
 
-        {/* Price */}
+        {/* Campo: Precio */}
         <div>
           <label htmlFor="price" className="mb-2 block text-sm font-semibold text-slate-700">
             Precio
@@ -181,7 +186,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSave, onCancel, isLoa
           />
         </div>
 
-        {/* Description */}
+        {/* Campo: Descripción */}
         <div>
           <label htmlFor="description" className="mb-2 block text-sm font-semibold text-slate-700">
             Descripción
@@ -196,7 +201,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSave, onCancel, isLoa
           ></textarea>
         </div>
 
-        {/* Initial Sede (Location) and Stock */}
+        {/* Campos: Sede y Stock inicial */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <div>
             <label htmlFor="initialSede" className="mb-2 block text-sm font-semibold text-slate-700">
@@ -243,7 +248,6 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSave, onCancel, isLoa
           </div>
         </div>
 
-        {/* Buttons */}
         <div className="flex flex-col gap-3 pt-6 sm:flex-row sm:justify-end">
           <button
             type="button"

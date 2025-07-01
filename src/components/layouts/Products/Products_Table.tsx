@@ -1,7 +1,4 @@
-// src/components/ProductTable/ProductTable.tsx
-
 import React, { useEffect, useState } from 'react';
-// Importa Product, createProduct, CreateProductPayload y createSedeProductAssociation
 import { getProducts, updateProduct, deleteProduct, type Product } from '@/api/product';
 import { productColumns } from './columns';
 import { useToast } from '@/components/ui/toast';
@@ -18,14 +15,14 @@ import {
 
 import { cn } from '@/lib/utils';
 
-import AddProductForm from '@/components/layouts/forms/AddProductsForm'; // Importa el nuevo componente de formulario
+import AddProductForm from '@/components/layouts/forms/AddProductsForm';
 
-// La interfaz Product ahora se importa de '@/api/product', no se define aquí
-// interface Product { ... } // ¡ELIMINADO!
-
+// Componente principal para gestionar la tabla de productos
 const ProductTable: React.FC = () => {
   const { addToast } = useToast();
   const { showModal } = useModal();
+  
+  // Estados para manejar productos y UI
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +31,7 @@ const ProductTable: React.FC = () => {
   const [isSavingProduct, setIsSavingProduct] = useState<boolean>(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
+  // Cargar productos desde la API
   const fetchProductsData = async () => {
     try {
       setLoading(true);
@@ -52,6 +50,7 @@ const ProductTable: React.FC = () => {
     fetchProductsData();
   }, []);
 
+  // Manejadores de eventos
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilterText(event.target.value);
   };
@@ -60,7 +59,7 @@ const ProductTable: React.FC = () => {
     setShowAddForm(true);
   };
 
-  // Función para manejar el guardado del producto (crear o editar)
+  // Guardar producto (crear o actualizar)
   const handleSaveNewProduct = async (formData: {
     name: string;
     sku: string;
@@ -98,7 +97,7 @@ const ProductTable: React.FC = () => {
 
       setShowAddForm(false);
       setEditingProduct(null);
-      await fetchProductsData(); // Recargar la lista de productos
+      await fetchProductsData();
     } catch (err: any) {
       console.error("Error al guardar el producto:", err);
       setError(err.response?.data?.message || err.message || "Error desconocido al guardar el producto.");
@@ -113,17 +112,18 @@ const ProductTable: React.FC = () => {
     }
   };
 
-
   const handleCancelAddProduct = () => {
     setShowAddForm(false);
     setEditingProduct(null);
   };
 
+  // Iniciar edición de producto
   const handleEditProduct = (product: Product) => {
     setEditingProduct(product);
     setShowAddForm(true);
   };
 
+  // Eliminar producto con confirmación
   const handleDeleteProduct = async (id: number) => {
     const confirmed = await showModal({
       type: 'warning',
@@ -154,13 +154,15 @@ const ProductTable: React.FC = () => {
     }
   };
 
+  // Estados de carga y error
   if (loading) return <p className="text-center text-gray-500 mt-10">Cargando productos...</p>;
   if (error && !showAddForm) return <p className="text-red-500 text-center mt-10">Error: {error}</p>;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
-        {/* Header Section */}
+
+        {/* Encabezado con título y botón de agregar */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-3xl font-bold text-slate-800 sm:text-4xl">Listado de Productos</h1>
@@ -183,7 +185,7 @@ const ProductTable: React.FC = () => {
           </button>
         </div>
 
-        {/* Search Section */}
+        {/* Barra de búsqueda */}
         <div className="mb-6">
           <div className="relative max-w-md">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -201,7 +203,7 @@ const ProductTable: React.FC = () => {
           </div>
         </div>
 
-        {/* Table Section */}
+        {/* Tabla de productos */}
         <div className="overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-200">
           {products.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 px-4">
@@ -228,7 +230,7 @@ const ProductTable: React.FC = () => {
                 </TableHeader>
                 <TableBody>
                   {products.map((product, index) => {
-                    // Ensure product has all required properties for the columns
+
                     const productWithDefaults = {
                       ...product,
                       price: (product as any).price ?? 0,

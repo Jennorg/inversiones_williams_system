@@ -1,7 +1,5 @@
 import React from 'react';
 import { useToast } from './toast';
-
-// Componente de ejemplo para mostrar cómo usar el sistema de toasts
 export const ToastExample: React.FC = () => {
   const { addToast } = useToast();
 

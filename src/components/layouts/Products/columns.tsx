@@ -1,33 +1,26 @@
 import React from 'react';
+
+// Estructura de datos del producto para la tabla
 interface Product {
   id: number;
   name: string;
   sku: string;
   price: number;
-  stock?: number; // Opcional ya que puede no estar presente
+  stock?: number;
   description: string | null;
   category: string | null;
-  createdAt: string; // Asumimos string ISO
-  updatedAt: string | null; // Asumimos string ISO
+  createdAt: string;
+  updatedAt: string | null;
 }
 
-// interface ProductWithActions extends Product {
-//   onEdit?: (product: Product) => void;
-//   onDelete?: (id: number) => void;
-// }
-
-// Define una interfaz genérica para una columna de tabla
-// T es el tipo de los datos de cada fila (en este caso, 'Product')
+// Interfaz genérica para definir columnas de tabla
 interface TableColumn<T> {
   header: string;
-  // accessorKey es una clave válida de T
   accessorKey: keyof T;
-  // La función 'cell' recibe un objeto con 'value' cuyo tipo es T[K]
-  // donde K es el tipo de accessorKey
   cell?: <K extends keyof T>(props: { value: T[K]; row: T }) => React.ReactNode;
 }
 
-// Define la estructura de tus columnas usando la interfaz TableColumn
+// Configuración de columnas para la tabla de productos
 export const productColumns: TableColumn<Product>[] = [
   {
     header: 'ID',
@@ -44,6 +37,7 @@ export const productColumns: TableColumn<Product>[] = [
   {
     header: 'Precio',
     accessorKey: 'price',
+    // Formatear precio con símbolo de moneda
     cell: ({ value }) => (
       <span className="font-semibold text-emerald-600">
         ${(value as number).toFixed(2)}
@@ -53,6 +47,7 @@ export const productColumns: TableColumn<Product>[] = [
   {
     header: 'Stock',
     accessorKey: 'stock',
+    // Mostrar stock con colores según disponibilidad
     cell: ({ value }) => (
       <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
         (value as number) > 10 ? 'bg-green-100 text-green-800' : 
@@ -66,6 +61,7 @@ export const productColumns: TableColumn<Product>[] = [
   {
     header: 'Categoría',
     accessorKey: 'category',
+    // Mostrar categoría con badge, o "Sin categoría" si está vacía
     cell: ({ value }) => (
       <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700">
         {value as string || 'Sin categoría'}
@@ -75,6 +71,7 @@ export const productColumns: TableColumn<Product>[] = [
   {
     header: 'Fecha Creación',
     accessorKey: 'createdAt',
+    // Formatear fecha en formato español
     cell: ({ value }) => (
       <span className="text-slate-600">
         {new Date(value as string).toLocaleDateString('es-VE', { 
